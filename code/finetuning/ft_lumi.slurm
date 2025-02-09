@@ -26,7 +26,7 @@ MAX_TARGET_LENGTH=${5}
 MODEL=${6}
 
 echo ${TRAIN_DATASET}
-
+export WANDB_PROJECT=definition_modeling
 srun singularity exec $SIF python3 finetune_model.py \
     --model_name_or_path ${MODEL} \  # /scratch/project_465001386/models/mt0-xl
     --do_train \
@@ -53,4 +53,5 @@ srun singularity exec $SIF python3 finetune_model.py \
     --metric_for_best_model=eval_rouge1 \
     --save_only_model=True \
     --generation_max_length=24 \
-    --val_max_target_length=24
+    --val_max_target_length=24 \
+    --report_to wandb

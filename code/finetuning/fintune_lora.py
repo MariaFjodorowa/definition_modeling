@@ -11,8 +11,6 @@ import pandas as pd
 from pathlib import Path
 from datasets import load_dataset
 from peft import get_peft_model, prepare_model_for_kbit_training, LoraConfig
-from accelerate import FullyShardedDataParallelPlugin, Accelerator, PartialState
-from torch.distributed.fsdp.fully_sharded_data_parallel import FullOptimStateDictConfig, FullStateDictConfig
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, BitsAndBytesConfig, Seq2SeqTrainer, \
     Seq2SeqTrainingArguments, EarlyStoppingCallback, DataCollatorForSeq2Seq
 
@@ -31,12 +29,6 @@ def train(args):
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
-
-    if args.verbose: print(f'-- Set accelerator --')
-    fsdp_plugin = FullyShardedDataParallelPlugin(  # see: https://huggingface.co/docs/accelerate/v0.11.0/en/fsdp
-        state_dict_config=FullStateDictConfig(offload_to_cpu=True, rank0_only=False),
-        optim_state_dict_config=FullOptimStateDictConfig(offload_to_cpu=True, rank0_only=False))
-    accelerator = Accelerator(fsdp_plugin=fsdp_plugin)
 
     output_dir = Path(f'{args.output_dir}/{args.finetuned_model_name}{args.tag}')
     logging_dir = str(output_dir.parent) + f'/log_{output_dir.name}'
@@ -123,7 +115,6 @@ def train(args):
         base_model)  # see: https://huggingface.co/docs/transformers/v4.18.0/en/performance#gradient-checkpointing
     base_model.config.pretraining_tp = 1  # info: https://github.com/huggingface/transformers/pull/24906
     model = get_peft_model(base_model, peft_config)
-    model = accelerator.prepare_model(model, device_placement=True)
     model.print_trainable_parameters()
 
     if args.verbose: print(f'-- Set Trainer --')

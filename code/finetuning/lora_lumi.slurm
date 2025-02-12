@@ -25,7 +25,7 @@ BATCH_SIZE=${4}
 
 echo ${TRAIN_DATASET}
 export WANDB_PROJECT=definition_modeling
-srun singularity exec $SIF python3 finetune_lora.py \
+srun singularity exec $SIF python3 fintune_lora.py \
     --train_filename ${TRAIN_DATASET} \
     --dev_filename ${VAL_DATASET} \
     --output_dir ${SAVE} \

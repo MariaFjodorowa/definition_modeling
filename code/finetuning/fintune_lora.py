@@ -38,6 +38,35 @@ def train(args):
         optim_state_dict_config=FullOptimStateDictConfig(offload_to_cpu=True, rank0_only=False))
     accelerator = Accelerator(fsdp_plugin=fsdp_plugin)
 
+    output_dir = Path(f'{args.output_dir}/{args.finetuned_model_name}{args.tag}')
+    logging_dir = str(output_dir.parent) + f'/log_{output_dir.name}'
+    training_args = Seq2SeqTrainingArguments(
+        output_dir=args.output_dir,
+        auto_find_batch_size=True,
+        learning_rate=args.learning_rate,
+        num_train_epochs=args.num_train_epochs,
+        per_device_train_batch_size=args.batch_size,
+        per_device_eval_batch_size=args.batch_size,
+        logging_dir=logging_dir,
+        logging_strategy="steps",
+        logging_steps=1000,
+        evaluation_strategy="steps",
+        eval_steps=1000,
+        save_strategy="steps",
+        save_steps=1000,
+        push_to_hub=False,
+        report_to="wandb",
+        overwrite_output_dir=True,
+        predict_with_generate=True,
+        save_total_limit=2,
+        load_best_model_at_end=True,
+        optim="adamw_bnb_8bit",
+        metric_for_best_model="eval_rouge1",
+        save_only_model=True,
+        generation_max_length=24,
+        gradient_accumulation_steps=args.gradient_accumulation_steps,
+    )
+
     if args.verbose: print('-- Load tokenizer --')
     tokenizer = AutoTokenizer.from_pretrained(args.base_model_name)
 
@@ -98,8 +127,7 @@ def train(args):
     model.print_trainable_parameters()
 
     if args.verbose: print(f'-- Set Trainer --')
-    output_dir = Path(f'{args.output_dir}/{args.finetuned_model_name}{args.tag}')
-    logging_dir = str(output_dir.parent) + f'/log_{output_dir.name}'
+
     # ignore tokenizer pad token in the loss
     label_pad_token_id = -100
 
@@ -143,28 +171,6 @@ def train(args):
         result["gen_len"] = np.mean(prediction_lens)
         return result
 
-    training_args = Seq2SeqTrainingArguments(
-        output_dir=args.output_dir,
-        auto_find_batch_size=True,
-        learning_rate=args.learning_rate,
-        num_train_epochs=args.num_train_epochs,
-        per_device_train_batch_size=args.batch_size,
-        per_device_eval_batch_size=args.batch_size,
-        logging_dir=logging_dir,
-        logging_strategy="epoch",
-        save_strategy="epoch",
-        push_to_hub=False,
-        report_to="wandb",
-        overwrite_output_dir=True,
-        predict_with_generate=True,
-        save_total_limit=2,
-        load_best_model_at_end=True,
-        optim="adamw_bnb_8bit",
-        metric_for_best_model="eval_rouge1",
-        save_only_model=True,
-        generation_max_length=24,
-        gradient_accumulation_steps=args.gradient_accumulation_steps,
-    )
     # Initialize our Trainer
     trainer = Seq2SeqTrainer(
         model=model,
@@ -174,7 +180,7 @@ def train(args):
         processing_class=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
-        # callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
     )
 
     if args.verbose: print(f'-- Training is started! --')

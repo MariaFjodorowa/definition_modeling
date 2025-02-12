@@ -6,6 +6,7 @@ import logging
 from os import path
 
 import pandas as pd
+from peft import PeftModel
 import torch
 import tqdm
 from transformers import (
@@ -230,7 +231,16 @@ if __name__ == "__main__":
                 bnb_4bit_quant_type="nf4",  # specifies the type of 4-bit quantization
                 bnb_4bit_compute_dtype=torch.float16,  # specifies the data type for computation
             )
-        model = AutoModelForSeq2SeqLM.from_pretrained(args.model, device_map="auto", quantization_config=bnb_config)
+        model = AutoModelForSeq2SeqLM.from_pretrained("CohereForAI/aya-101", device_map="auto", quantization_config=bnb_config)
+        if "aya" in args.model:
+            model.resize_token_embeddings(len(tokenizer))
+            # Load PEFT model
+            model = PeftModel.from_pretrained(
+                model=model,
+                model_id=args.model,
+                peft_config=bnb_config,
+                device_map='auto',
+            )
     else:
         model = AutoModelForSeq2SeqLM.from_pretrained(
             args.model, low_cpu_mem_usage=True

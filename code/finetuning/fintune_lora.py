@@ -97,7 +97,7 @@ def train(args):
     model = accelerator.prepare_model(model, device_placement=True)
     model.print_trainable_parameters()
 
-    if args.verbose: print(f'-- Set SFTTrainer --')
+    if args.verbose: print(f'-- Set Trainer --')
     output_dir = Path(f'{args.output_dir}/{args.finetuned_model_name}{args.tag}')
     logging_dir = str(output_dir.parent) + f'/log_{output_dir.name}'
     # ignore tokenizer pad token in the loss
@@ -209,6 +209,7 @@ if __name__ == '__main__':
     parser.add_argument('--learning_rate', type=float, default=1e-4)
     parser.add_argument('--num_train_epochs', type=int, default=2)
     parser.add_argument('--gradient_accumulation_steps', type=int, default=4)
+    parser.add_argument('--tag', default='')
     args = parser.parse_args()
 
     train(args)

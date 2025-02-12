@@ -75,7 +75,8 @@ def train(args):
 
     def preprocess_func(data):
         # tokenize each row of inputs and outputs
-        model_inputs = tokenizer(data["example"], truncation=True, max_length=args.max_seq_length, padding='max_length')
+        model_inputs = tokenizer(
+            data["example"], truncation=True, max_length=args.max_seq_length, padding='max_length')
         labels = tokenizer(data["definition"], truncation=True, max_length=24, padding='max_length')
 
         model_inputs["labels"] = labels["input_ids"]
@@ -121,15 +122,15 @@ def train(args):
     if args.verbose: print(f'-- Set Trainer --')
 
     # ignore tokenizer pad token in the loss
-    label_pad_token_id = -100
+    # label_pad_token_id = -100
 
     # padding the sentence of the entire datasets
-    data_collator = DataCollatorForSeq2Seq(
-        tokenizer=tokenizer,
-        model=model,
-        label_pad_token_id=label_pad_token_id,
-        pad_to_multiple_of=8
-    )
+    # data_collator = DataCollatorForSeq2Seq(
+    #     tokenizer=tokenizer,
+    #     model=model,
+    #     label_pad_token_id=label_pad_token_id,
+    #     pad_to_multiple_of=8
+    # )
 
     def postprocess_text(preds, labels):
         preds = [pred.strip() for pred in preds]
@@ -170,7 +171,7 @@ def train(args):
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         processing_class=tokenizer,
-        data_collator=data_collator,
+        #data_collator=data_collator,
         compute_metrics=compute_metrics,
         callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
     )

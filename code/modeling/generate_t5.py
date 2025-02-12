@@ -4,12 +4,14 @@ import argparse
 import csv
 import logging
 from os import path
+
 import pandas as pd
 import torch
 import tqdm
 from transformers import (
     AutoTokenizer,
     AutoModelForSeq2SeqLM,
+    BitsAndBytesConfig,
 )
 
 
@@ -220,7 +222,15 @@ if __name__ == "__main__":
 
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     if torch.cuda.is_available():
-        model = AutoModelForSeq2SeqLM.from_pretrained(args.model, device_map="auto")
+        bnb_config = None
+        if "aya" in args.model:
+            bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,  # enable 4-bit quantization
+                bnb_4bit_use_double_quant=True,  # enables double quantization (speed-up finetuning)
+                bnb_4bit_quant_type="nf4",  # specifies the type of 4-bit quantization
+                bnb_4bit_compute_dtype=torch.float16,  # specifies the data type for computation
+            )
+        model = AutoModelForSeq2SeqLM.from_pretrained(args.model, device_map="auto", quantization_config=bnb_config)
     else:
         model = AutoModelForSeq2SeqLM.from_pretrained(
             args.model, low_cpu_mem_usage=True

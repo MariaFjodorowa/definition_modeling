@@ -149,7 +149,7 @@ def train(args):
         learning_rate=args.learning_rate,
         num_train_epochs=args.num_train_epochs,
         per_device_train_batch_size=args.batch_size,
-        per_device_eval_batch_size=args.batch_siz,
+        per_device_eval_batch_size=args.batch_size,
         logging_dir=logging_dir,
         logging_strategy="epoch",
         save_strategy="epoch",

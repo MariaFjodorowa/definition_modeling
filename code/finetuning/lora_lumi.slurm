@@ -30,4 +30,5 @@ srun singularity exec $SIF python3 fintune_lora.py \
     --dev_filename ${VAL_DATASET} \
     --output_dir ${SAVE} \
     --batch_size=${BATCH_SIZE} \
-    --verbose
+    --verbose \
+    --gradient_accumulation_steps 1

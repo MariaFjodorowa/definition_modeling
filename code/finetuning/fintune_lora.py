@@ -57,6 +57,7 @@ def train(args):
         save_only_model=True,
         generation_max_length=24,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
+        dataloader_num_workers=8,
     )
 
     if args.verbose: print('-- Load tokenizer --')
@@ -110,7 +111,7 @@ def train(args):
     base_model = AutoModelForSeq2SeqLM.from_pretrained(**settings)
     base_model.resize_token_embeddings(len(tokenizer))
     base_model.config.use_cache = False  # avoid using cache params
-    base_model.gradient_checkpointing_enable()  # this will reduce GPU memory but slow down the process
+    # base_model.gradient_checkpointing_enable()  # this will reduce GPU memory but slow down the process
     base_model = prepare_model_for_kbit_training(
         base_model)  # see: https://huggingface.co/docs/transformers/v4.18.0/en/performance#gradient-checkpointing
     base_model.config.pretraining_tp = 1  # info: https://github.com/huggingface/transformers/pull/24906

@@ -152,8 +152,8 @@ def define(
                 outputs = lm.generate(
                     input_ids=inp, attention_mask=att, max_new_tokens=60, **gen_args
             )
-        predictions = cur_tokenizer.batch_decode(outputs, skip_special_tokens=True)
-        definitions += predictions
+            predictions = cur_tokenizer.batch_decode(outputs, skip_special_tokens=True)
+            definitions += predictions
     logger.info(f"Generating definitions finished")
     return definitions
 

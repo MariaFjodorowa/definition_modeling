@@ -117,8 +117,8 @@ def define(
     target_ids = torch.tensor([el[-1] for el in target_ids])
 
     if torch.cuda.is_available():
-        inputs = inputs.to("cuda")
-        target_ids = target_ids.to("cuda")
+        inputs = inputs.to("cuda:0")
+        target_ids = target_ids.to("cuda:0")
 
     test_dataset = torch.utils.data.TensorDataset(
         inputs["input_ids"], inputs["attention_mask"], target_ids
@@ -137,19 +137,20 @@ def define(
     if num_beam_groups > 1:
         gen_args["diversity_penalty"] = 0.5
     definitions = []
-    for inp, att, targetwords in tqdm.tqdm(test_iter):
-        if filter_target:
-            bad = [[el] for el in targetwords.tolist()]
-            outputs = lm.generate(
-                input_ids=inp,
-                attention_mask=att,
-                max_new_tokens=60,
-                bad_words_ids=bad,
-                **gen_args,
+    with torch.autocast("cuda"):
+        for inp, att, targetwords  in tqdm.tqdm(test_iter):
+            if filter_target:
+                bad = [[el] for el in targetwords.tolist()]
+                outputs = lm.generate(
+                    input_ids=inp,
+                    attention_mask=att,
+                    max_new_tokens=60,
+                    bad_words_ids=bad,
+                    **gen_args,
             )
-        else:
-            outputs = lm.generate(
-                input_ids=inp, attention_mask=att, max_new_tokens=60, **gen_args
+            else:
+                outputs = lm.generate(
+                    input_ids=inp, attention_mask=att, max_new_tokens=60, **gen_args
             )
         predictions = cur_tokenizer.batch_decode(outputs, skip_special_tokens=True)
         definitions += predictions
@@ -229,18 +230,11 @@ if __name__ == "__main__":
                 load_in_4bit=True,  # enable 4-bit quantization
                 bnb_4bit_use_double_quant=True,  # enables double quantization (speed-up finetuning)
                 bnb_4bit_quant_type="nf4",  # specifies the type of 4-bit quantization
-                bnb_4bit_compute_dtype=torch.float16,  # specifies the data type for computation
+                bnb_4bit_compute_dtype=torch.bfloat16,  # specifies the data type for computation
             )
-        model = AutoModelForSeq2SeqLM.from_pretrained("CohereForAI/aya-101", device_map="auto", quantization_config=bnb_config)
-        if "aya" in args.model:
-            model.resize_token_embeddings(len(tokenizer))
-            # Load PEFT model
-            model = PeftModel.from_pretrained(
-                model=model,
-                model_id=args.model,
-                peft_config=bnb_config,
-                device_map='auto',
-            )
+        model = AutoModelForSeq2SeqLM.from_pretrained(args.model,
+quantization_config=bnb_config, device_map='auto',
+)
     else:
         model = AutoModelForSeq2SeqLM.from_pretrained(
             args.model, low_cpu_mem_usage=True
@@ -295,7 +289,7 @@ if __name__ == "__main__":
             num_beams=args.num_beams,
             num_beam_groups=args.num_beam_groups,
         )
-
+        print(answers)
         test_dataframe["Generated_Definition"] = answers
         if "CoDWoE" in args.testdata:
             test_dataframe = test_dataframe[

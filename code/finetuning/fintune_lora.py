@@ -9,10 +9,11 @@ import nltk
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from datasets import load_dataset
+from datasets import load_dataset, Dataset
 from peft import get_peft_model, prepare_model_for_kbit_training, LoraConfig
+import pyarrow.compute as pc
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, BitsAndBytesConfig, Seq2SeqTrainer, \
-    Seq2SeqTrainingArguments, EarlyStoppingCallback, DataCollatorForSeq2Seq
+    Seq2SeqTrainingArguments, EarlyStoppingCallback
 
 
 def decode(text):
@@ -72,12 +73,18 @@ def train(args):
         sep="\t",
         data_files=data_files,
     )
-
+    raw_datasets['train'] = Dataset.from_pandas(raw_datasets['train'].to_pandas().dropna()) #must be  a better way with pyarrow
     def preprocess_func(data):
         # tokenize each row of inputs and outputs
         model_inputs = tokenizer(
             data["example"], truncation=True, max_length=args.max_seq_length, padding='max_length')
-        labels = tokenizer(data["definition"], truncation=True, max_length=24, padding='max_length')
+        try:
+            labels = tokenizer(data["definition"], truncation=True, max_length=24, padding='max_length')
+        except TypeError:
+            for i, defi in enumerate(data["definition"]):
+                if not isinstance(defi, str):
+                    print(i, defi)
+            raise
 
         model_inputs["labels"] = labels["input_ids"]
         return model_inputs

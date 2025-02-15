@@ -2,12 +2,12 @@
 
 #SBATCH --job-name=defgen_generate
 #SBATCH --account=project_465001386
-#SBATCH --partition=standard-g    # 8 gpus at each node
+#SBATCH --partition=standard-g
 #SBATCH --time=1:00:00
 #SBATCH --nodes=1
 #SBATCH --mem=16G
 #SBATCH --cpus-per-task=4
-#SBATCH --gpus-per-node=8
+#SBATCH --gpus-per-node=1
 
 
 source ${HOME}/.bashrc
@@ -26,9 +26,9 @@ PROMPT=${4}
 srun singularity exec $SIF python3 generate_t5.py \
     --model ${MODEL} \
     --testdata ${TESTDATA} \
-    --bsize 16 \
+    --bsize 48 \
     --save ${SAVE} \
     --prompt ${PROMPT} \
-    --sampling 2 \
+    --sampling 0 \
     --rpenalty 1.2
 

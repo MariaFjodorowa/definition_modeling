@@ -41,23 +41,23 @@ def train(args):
         per_device_eval_batch_size=args.batch_size,
         logging_dir=logging_dir,
         logging_strategy="steps",
-        logging_steps=1000,
+        logging_steps=500,
         evaluation_strategy="steps",
-        eval_steps=1000,
+        eval_steps=500,
         save_strategy="steps",
-        save_steps=1000,
+        save_steps=500,
         push_to_hub=False,
         report_to="wandb",
         overwrite_output_dir=True,
         predict_with_generate=True,
         save_total_limit=2,
         load_best_model_at_end=True,
-        optim="adamw_bnb_8bit",
+        optim="adafactor",
         metric_for_best_model="eval_rouge1",
         save_only_model=True,
         generation_max_length=24,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
-        dataloader_num_workers=8,
+#        dataloader_num_workers=8,
     )
 
     if args.verbose: print('-- Load tokenizer --')
@@ -95,7 +95,7 @@ def train(args):
         load_in_4bit=True,  # enable 4-bit quantization
         bnb_4bit_use_double_quant=True,  # enables double quantization (speed-up finetuning)
         bnb_4bit_quant_type="nf4",  # specifies the type of 4-bit quantization
-        bnb_4bit_compute_dtype=torch.float16,  # specifies the data type for computation
+        bnb_4bit_compute_dtype=torch.bfloat16,  # specifies the data type for computation
     )
     settings['quantization_config'] = bnb_config
 
@@ -103,14 +103,14 @@ def train(args):
         r=args.lora_rank,
         lora_alpha=args.lora_alpha,
         lora_dropout=args.lora_dropout,
-        target_modules=["q", "v"],
+        target_modules=["q", "v", "k","o"],
         bias="none",
         task_type="SEQ_2_SEQ_LM"
     )
 
     if args.verbose: print(f'-- Load base model --')
     base_model = AutoModelForSeq2SeqLM.from_pretrained(**settings)
-    base_model.resize_token_embeddings(len(tokenizer))
+#    base_model.resize_token_embeddings(len(tokenizer))
     base_model.config.use_cache = False  # avoid using cache params
     # base_model.gradient_checkpointing_enable()  # this will reduce GPU memory but slow down the process
     base_model = prepare_model_for_kbit_training(

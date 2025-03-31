@@ -1,0 +1,138 @@
+Starting job 14330697 on gpu-12-3 on saga at Sun Mar 30 17:12:40 CEST 2025
+
+
+Currently Loaded Modules:
+  1) Zen2Env                                                 (S)
+  2) GCCcore/12.2.0
+  3) zlib/1.2.12-GCCcore-12.2.0                              (H)
+  4) binutils/2.39-GCCcore-12.2.0                            (H)
+  5) GCC/12.2.0
+  6) numactl/2.0.16-GCCcore-12.2.0                           (H)
+  7) XZ/5.2.7-GCCcore-12.2.0                                 (H)
+  8) libxml2/2.10.3-GCCcore-12.2.0                           (H)
+  9) libpciaccess/0.17-GCCcore-12.2.0                        (H)
+ 10) hwloc/2.8.0-GCCcore-12.2.0                              (H)
+ 11) CUDA/12.0.0
+ 12) hpcx/2.16
+ 13) OpenMPI/4.1.4-GCC-12.2.0
+ 14) OpenBLAS/0.3.21-GCC-12.2.0
+ 15) FlexiBLAS/3.2.1-GCC-12.2.0
+ 16) FFTW/3.3.10-GCC-12.2.0
+ 17) gompi/2022b
+ 18) FFTW.MPI/3.3.10-gompi-2022b
+ 19) ScaLAPACK/2.2.0-gompi-2022b-fb
+ 20) foss/2022b
+ 21) bzip2/1.0.8-GCCcore-12.2.0                              (H)
+ 22) ncurses/6.3-GCCcore-12.2.0                              (H)
+ 23) libreadline/8.2-GCCcore-12.2.0                          (H)
+ 24) Tcl/8.6.12-GCCcore-12.2.0                               (H)
+ 25) SQLite/3.39.4-GCCcore-12.2.0                            (H)
+ 26) GMP/6.2.1-GCCcore-12.2.0                                (H)
+ 27) libffi/3.4.4-GCCcore-12.2.0                             (H)
+ 28) OpenSSL/1.1                                             (H)
+ 29) Python/3.10.8-GCCcore-12.2.0
+ 30) cuDNN/8.9.7.29-CUDA-12.0.0
+ 31) NCCL/2.16.2-GCCcore-12.2.0-CUDA-12.0.0
+ 32) Ninja/1.11.1-GCCcore-12.2.0                             (H)
+ 33) Abseil/20230125.2-GCCcore-12.2.0
+ 34) protobuf/23.0-GCCcore-12.2.0
+ 35) protobuf-python/4.23.0-GCCcore-12.2.0
+ 36) pybind11/2.10.4-GCCcore-12.2.0
+ 37) libyaml/0.2.5-GCCcore-12.2.0                            (H)
+ 38) PyYAML/6.0-GCCcore-12.2.0                               (H)
+ 39) MPFR/4.2.0-GCCcore-12.2.0                               (H)
+ 40) NASM/2.15.05-GCCcore-12.2.0                             (H)
+ 41) x264/20230226-GCCcore-12.2.0                            (H)
+ 42) LAME/3.100-GCCcore-12.2.0                               (H)
+ 43) x265/3.5-GCCcore-12.2.0                                 (H)
+ 44) expat/2.4.9-GCCcore-12.2.0                              (H)
+ 45) libpng/1.6.38-GCCcore-12.2.0                            (H)
+ 46) Brotli/1.0.9-GCCcore-12.2.0                             (H)
+ 47) freetype/2.12.1-GCCcore-12.2.0                          (H)
+ 48) util-linux/2.38.1-GCCcore-12.2.0                        (H)
+ 49) fontconfig/2.14.1-GCCcore-12.2.0                        (H)
+ 50) xorg-macros/1.19.3-GCCcore-12.2.0                       (H)
+ 51) X11/20221110-GCCcore-12.2.0                             (H)
+ 52) FriBidi/1.0.12-GCCcore-12.2.0                           (H)
+ 53) SDL2/2.26.3-GCCcore-12.2.0                              (H)
+ 54) FFmpeg/5.1.2-GCCcore-12.2.0                             (H)
+ 55) libjpeg-turbo/2.1.4-GCCcore-12.2.0                      (H)
+ 56) jbigkit/2.1-GCCcore-12.2.0                              (H)
+ 57) gzip/1.12-GCCcore-12.2.0                                (H)
+ 58) lz4/1.9.4-GCCcore-12.2.0                                (H)
+ 59) zstd/1.5.2-GCCcore-12.2.0                               (H)
+ 60) libdeflate/1.15-GCCcore-12.2.0                          (H)
+ 61) LibTIFF/4.4.0-GCCcore-12.2.0                            (H)
+ 62) Pillow/9.4.0-GCCcore-12.2.0                             (H)
+ 63) hypothesis/6.68.2-GCCcore-12.2.0                        (H)
+ 64) nlpl-numpy/1.24.4-foss-2022b-Python-3.10.8
+ 65) nlpl-python-candy/01-foss-2022b-Python-3.10.8
+ 66) expecttest/0.1.3-GCCcore-12.2.0
+ 67) Tk/8.6.12-GCCcore-12.2.0                                (H)
+ 68) Tkinter/3.10.8-GCCcore-12.2.0                           (H)
+ 69) OpenPGM/5.2.122-GCCcore-12.2.0                          (H)
+ 70) libsodium/1.0.18-GCCcore-12.2.0                         (H)
+ 71) ZeroMQ/4.3.4-GCCcore-12.2.0                             (H)
+ 72) PyZMQ/25.1.0-GCCcore-12.2.0
+ 73) nlpl-scipy-ecosystem/01-foss-2022b-Python-3.10.8
+ 74) Z3/4.12.2-GCCcore-12.2.0                                (H)
+ 75) nlpl-pytorch/2.1.2-foss-2022b-cuda-12.0.0-Python-3.10.8
+ 76) nlpl-huggingface-hub/0.27.1-foss-2022b-Python-3.10.8
+ 77) nlpl-tokenizers/0.21.0-foss-2022b-Python-3.10.8
+ 78) nlpl-transformers/4.47.1-foss-2022b-Python-3.10.8
+ 79) nlpl-accelerate/0.34.2-foss-2022b-Python-3.10.8
+ 80) nlpl-scikit-bundle/1.3.2-foss-2022b-Python-3.10.8
+ 81) nlpl-nltk/3.8.1-foss-2022b-Python-3.10.8
+ 82) nlpl-tensorboard/2.15.1-foss-2022b-Python-3.10.8
+ 83) nlpl-datasets/3.2.0-foss-2022b-Python-3.10.8
+ 84) nlpl-nlptools/04-foss-2022b-Python-3.10.8
+ 85) nlpl-wandb/0.15.2-foss-2022b-Python-3.10.8
+ 86) nlpl-llmtools/06-foss-2022b-Python-3.10.8
+
+  Where:
+   H:  Hidden Module
+   S:  Module is Sticky, requires --force to unload or purge
+
+ 
+
+Downloading shards:   0%|          | 0/6 [00:00<?, ?it/s]Downloading shards:  17%|█▋        | 1/6 [00:42<03:31, 42.24s/it]Downloading shards:  33%|███▎      | 2/6 [01:26<02:53, 43.46s/it]Downloading shards:  50%|█████     | 3/6 [02:12<02:13, 44.56s/it]Downloading shards:  67%|██████▋   | 4/6 [02:55<01:27, 43.87s/it]Downloading shards:  83%|████████▎ | 5/6 [03:39<00:44, 44.17s/it]Downloading shards: 100%|██████████| 6/6 [04:04<00:00, 37.49s/it]Downloading shards: 100%|██████████| 6/6 [04:04<00:00, 40.74s/it]
+Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards:  17%|█▋        | 1/6 [00:08<00:44,  8.83s/it]Loading checkpoint shards:  33%|███▎      | 2/6 [00:16<00:33,  8.28s/it]Loading checkpoint shards:  50%|█████     | 3/6 [00:25<00:25,  8.50s/it]Loading checkpoint shards:  67%|██████▋   | 4/6 [00:33<00:17,  8.50s/it]Loading checkpoint shards:  83%|████████▎ | 5/6 [00:43<00:08,  8.95s/it]Loading checkpoint shards: 100%|██████████| 6/6 [00:48<00:00,  7.58s/it]Loading checkpoint shards: 100%|██████████| 6/6 [00:48<00:00,  8.11s/it]
+Device set to use cuda:0
+<|im_start|>user
+Объедини определения слова барсук в одно с таким же смыслом: хищное животное; род млекопитающих, обитающий в лесах; род птиц, обитающих в лесах; хищное животное, обитающее в лесу; хищное животное, обитающее в норах. <|im_end|>
+<|im_start|>assistant
+
+<|im_start|>user
+Объедини определения слова барсук в одно с таким же смыслом: хищное животное; род млекопитающих, обитающий в лесах; род птиц, обитающих в лесах; хищное животное, обитающее в лесу; хищное животное, обитающее в норах. <|im_end|>
+<|im_start|>assistant
+ Барсук - это:
+1. Хищное животное;
+2. Род млекопитающих, обитающий в лесах;
+3. Род птиц, обитающих в лесах;
+4. Хищное животное, обитающее в лесу;
+5. Хищное животное, обитающее в норах.
+
+Job 14330697 consumed 0.7 billing hours from project nn9851k.
+
+Submitted 2025-03-30T17:12:25; waited 15.0 seconds in the queue after becoming eligible to run.
+
+Requested wallclock time: 30.0 minutes
+Elapsed wallclock time:   5.6 minutes
+
+Job exited normally.
+
+Task and CPU statistics:
+ID              CPUs  Tasks  CPU util                Start  Elapsed  Exit status
+14330697           2            0.0 %  2025-03-30T17:12:40  335.0 s  0
+14330697.batch     2      1    35.4 %  2025-03-30T17:12:40  335.0 s  0
+
+Used CPU time:   4.0 CPU minutes
+Unused CPU time: 7.2 CPU minutes
+
+Memory statistics, in GiB:
+ID               Alloc   Usage
+14330697          32.0        
+14330697.batch    32.0    26.1
+
+GPU usage stats:
+Job 14330697 completed at Sun Mar 30 17:18:15 CEST 2025
